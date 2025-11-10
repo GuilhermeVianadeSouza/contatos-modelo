@@ -45,7 +45,7 @@ async function atualizarContato(id, contato) {
 
 }
 
-async function deletarContato(id) {
+export async function deletarContato(id) {
     
     const url = `https://bakcend-fecaf-render.onrender.com/contatos/${id}`
 
