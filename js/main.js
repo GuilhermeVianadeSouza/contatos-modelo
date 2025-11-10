@@ -57,10 +57,10 @@ async function cadastrarUsuario(cadastro){
     const emailInput = document.getElementById('email')
     emailInput.placeholder = 'digite seu email'
     emailInput.required = true
+    emailInput.disabled = true
 
     const celularInput = document.getElementById('celular')
     celularInput.placeholder = 'digite seu numero'
-    celularInput.pattern = '\d{11}'
     celularInput.required = true
     celularInput.disabled = true
 
@@ -72,8 +72,15 @@ async function cadastrarUsuario(cadastro){
     cidadeInput.disabled = true
 
     nomeInput.addEventListener('input', function(){
-        if(nomeInput.checkValidity() && emailInput.checkValidity()){
-            celularInput.disabled = false
+        if(nomeInput.checkValidity()){
+            emailInput.disabled = false
+        } else {
+            emailInput.disabled = true
+        }
+    })
+    emailInput.addEventListener('input', function(){
+        if(emailInput.checkValidity()){
+        celularInput.disabled = false
             enderecoInput.disabled = false
             cidadeInput.disabled = false
         } else{
