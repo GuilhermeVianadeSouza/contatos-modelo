@@ -26,7 +26,7 @@ export async function criarContato(contato) {
 
 }
 
-async function atualizarContato(id, contato) {
+export async function atualizarContato(id, contato) {
     
     const url = `https://bakcend-fecaf-render.onrender.com/contatos/${id}`
 

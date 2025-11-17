@@ -2,6 +2,98 @@
 
 import { lerContatos } from "./contatos.js"
 import { criarContato } from "./contatos.js"
+import { atualizarContato } from "./contatos.js"
+import { deletarContato } from "./contatos.js"
+
+const mainView = document.querySelector('main');
+const cardsContainer = document.querySelector('#container');
+const updateForm = document.querySelector('main > form');
+
+
+const inputNome = document.querySelector('#nome');
+const inputEmail = document.querySelector('#email');
+const inputCelular = document.querySelector('#celular');
+const inputEndereco = document.querySelector('#endereco');
+const inputCidade = document.querySelector('#cidade');
+const imgPreview = document.querySelector('#preview-image');
+const inputFile = document.querySelector('#foto');
+
+
+const btnEditar = document.querySelector('#editar');
+const btnDeletar = document.querySelector('#deletar');
+const btnSalvar = document.querySelector('#salvar');
+const btnCancelar = document.querySelector('#cancelar');
+
+
+cardsContainer.addEventListener('click', (event) => {
+
+    const cardClicado = event.target.closest('.card-contato');
+    if (!cardClicado) {
+        return; 
+    }
+
+    const id = cardClicado.dataset.id;
+    const nome = cardClicado.querySelector('h2').textContent; 
+    const celular = cardClicado.querySelector('p').textContent;
+    const email = cardClicado.dataset.email
+    const endereco = cardClicado.dataset.endereco
+    const cidade = cardClicado.dataset.cidade
+
+    
+    inputNome.value = nome;
+    inputCelular.value = celular;
+    inputEmail.value = email
+    inputEndereco.value = endereco
+    inputCidade.value = cidade
+
+    updateForm.dataset.editingId = id;
+
+    
+    mainView.classList.replace('card-show', 'form-show');
+});
+
+btnDeletar.addEventListener('click', () => {
+    const id = updateForm.dataset.editingId;
+    if (confirm('Tem certeza?')) {
+        deletarContato(id).then(() => {
+            cardsContainer.querySelector(`[data-id="${id}"]`).remove();
+            mainView.classList.replace('form-show', 'card-show');
+        });
+    }
+});
+
+// Botão SALVAR (para ATUALIZAR)
+btnSalvar.addEventListener('click', () => {
+    const id = updateForm.dataset.editingId;
+
+    // Pega os dados ATUALIZADOS do formulário
+    const dadosAtualizados = {
+        nome: inputNome.value,
+        email: inputEmail.value,
+        celular: inputCelular.value,
+        endereco: inputEndereco.value,
+        cidade: inputCidade.value,
+        // foto: ... (lógica do input file é mais complexa)
+    };
+
+    atualizarContato(id, dadosAtualizados).then(() => {
+        // Atualiza o card na tela
+        const card = cardsContainer.querySelector(`[data-id="${id}"]`);
+        card.querySelector('.card-nome').textContent = dadosAtualizados.nome;
+        card.querySelector('.card-celular').textContent = dadosAtualizados.celular;
+        // ...
+        
+        // Volta pra tela de cards
+        mainView.classList.replace('form-show', 'card-show');
+    });
+});
+
+// Botão CANCELAR
+btnCancelar.addEventListener('click', () => {
+    // Apenas volta para a tela de cards
+    mainView.classList.replace('form-show', 'card-show');
+});
+
 
 function mostrarCards(listaDeContatos){
 
@@ -11,6 +103,10 @@ function mostrarCards(listaDeContatos){
 
         const cardContato = document.createElement('div')
         cardContato.classList.add('card-contato')
+        cardContato.dataset.id = contato.id
+        cardContato.dataset.email = contato.email
+        cardContato.dataset.endereco = contato.endereco
+        cardContato.dataset.cidade = contato.cidade
 
         const imagemContato = document.createElement('img')
         imagemContato.src = contato.foto || '../img/avatar1.avif'
@@ -20,7 +116,7 @@ function mostrarCards(listaDeContatos){
 
         const numeroContato = document.createElement('p')
         numeroContato.textContent = contato.celular 
-
+            
             cardContato.appendChild(imagemContato)
             cardContato.appendChild(nomeContato)
             cardContato.appendChild(numeroContato)
@@ -137,6 +233,14 @@ async function cadastrarUsuario(cadastro){
         alert('Erro ao cadastrar o contato. Tente novamente.');
     }
 })
+}
+
+async function attcontatos (){
+
+}
+
+async function apagarContato(id){
+
 }
 
 const contatos = await lerContatos()
